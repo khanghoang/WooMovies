@@ -6,9 +6,10 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "react-native": "git+ssh://git@github.com:alinz/react-native.git#v0.10.1-stable-redux",
+    "react-native": "^0.10.1",
     "react-redux": "2.1.1",
     "redux": "2.0.0",
-    "redux-thunk": "0.1.0"
+    "redux-thunk": "^0.1.0",
+    "woocommerce-api": "^1.0.2"
   }
 }

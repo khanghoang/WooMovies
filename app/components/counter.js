@@ -1,22 +1,11 @@
-import React, {
-  StyleSheet,
+import React from 'react-native';
+
+const {
   Component,
   View,
   Text,
-  TouchableOpacity
-} from 'react-native';
-
-const styles = StyleSheet.create({
-  button: {
-    width: 100,
-    height: 30,
-    padding: 10,
-    backgroundColor: 'lightgray',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 3
-  }
-});
+  TouchableHighlight
+} = React;
 
 export default class Counter extends Component {
   constructor(props) {
@@ -27,14 +16,14 @@ export default class Counter extends Component {
     const { counter, increment, decrement } = this.props;
 
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{flex: 1}}>
         <Text>{counter}</Text>
-        <TouchableOpacity onPress={increment} style={styles.button}>
+        <TouchableHighlight onPress={increment}>
           <Text>up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={decrement} style={styles.button}>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={decrement}>
           <Text>down</Text>
-        </TouchableOpacity>
+        </TouchableHighlight>
       </View>
     );
   }
