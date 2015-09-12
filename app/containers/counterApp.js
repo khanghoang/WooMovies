@@ -20,6 +20,7 @@ class CounterApp extends Component {
   constructor(props) {
     super(props);
     this.state = this.getInitialState();
+    this._pressData = {};
   }
 
   getInitialState() {
@@ -39,14 +40,11 @@ class CounterApp extends Component {
   }
 
   _pressRow(rowID: number) {
+    console.log(rowID);
     this._pressData[rowID] = !this._pressData[rowID];
     this.setState({dataSource: this.state.dataSource.cloneWithRows(
       this._genRows(this._pressData)
     )});
-  }
-
-  _pressData({}: {[key: number]: boolean}) {
-
   }
 
   _renderRow(rowData: string, sectionID: number, rowID: number) {
@@ -54,6 +52,7 @@ class CounterApp extends Component {
     var imgSource = {
       uri: THUMB_URLS[rowHash % THUMB_URLS.length],
     };
+
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View>
@@ -75,7 +74,7 @@ class CounterApp extends Component {
     return (
       <ListView
           dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
+          renderRow={this._renderRow.bind(this)}
         />
     );
   }
