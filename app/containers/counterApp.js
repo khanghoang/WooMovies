@@ -6,9 +6,6 @@ import Counter from '../components/counter';
 import * as counterActions from '../actions/counterActions';
 import { connect } from 'react-redux/native';
 
-@connect(state => ({
-  state: state.counter
-}))
 class CounterApp extends Component {
   constructor(props) {
     super(props);
@@ -25,4 +22,10 @@ class CounterApp extends Component {
   }
 }
 
-export default CounterApp;
+mapStateToProps = (state) => {
+  return {
+    state: state.counter
+  }
+}
+
+export default connect(mapStateToProps)(CounterApp);
