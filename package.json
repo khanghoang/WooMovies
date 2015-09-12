@@ -7,8 +7,9 @@
   },
   "dependencies": {
     "react-native": "^0.10.1",
-    "react-redux": "2.1.1",
-    "redux": "2.0.0",
+    "react-native-button": "^1.2.1",
+    "react-redux": "^1.0.1",
+    "redux": "^1.0.1",
     "redux-thunk": "^0.1.0",
     "woocommerce-api": "^1.0.2"
   }

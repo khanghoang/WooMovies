@@ -1,6 +1,7 @@
 'use strict';
 
 import React from "react-native";
+import Button from "react-native-button";
 
 const {
   Component,
@@ -9,7 +10,10 @@ const {
   TouchableHighlight,
   StyleSheet,
   Text,
-  View
+  View,
+  Animated,
+  LayoutAnimation,
+  Label
 } = React;
 import {bindActionCreators} from 'redux';
 import Counter from '../components/counter';
@@ -27,6 +31,7 @@ class CounterApp extends Component {
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return {
       dataSource: ds.cloneWithRows(this._genRows({})),
+      bounceValue: new Animated.Value(0),
     };
   }
 
@@ -45,6 +50,7 @@ class CounterApp extends Component {
     this.setState({dataSource: this.state.dataSource.cloneWithRows(
       this._genRows(this._pressData)
     )});
+    LayoutAnimation.spring();
   }
 
   _renderRow(rowData: string, sectionID: number, rowID: number) {
@@ -53,14 +59,19 @@ class CounterApp extends Component {
       uri: THUMB_URLS[rowHash % THUMB_URLS.length],
     };
 
+    let transform = {
+      height: 50,
+      width: 100,
+      backgroundColor: "#000000"
+    }
+
+    let style = !! this._pressData[rowID] ? [styles.rowEnable, transform] : [styles.row];
+
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
-        <View>
-          <View style={styles.row}>
-            <Image style={styles.thumb} source={imgSource} />
-            <Text style={styles.text}>
-              {rowData + ' - ' + LOREM_IPSUM.substr(0, rowHash % 301 + 10)}
-            </Text>
+        <View style={styles.row}>
+          <View style={style}>
+          <Text style={{flex: 1}}>abc</Text>
           </View>
           <View style={styles.separator} />
         </View>
@@ -99,10 +110,18 @@ var hashCode = function(str) {
 
 var styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
+    flex: 1,
     justifyContent: 'center',
     padding: 10,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center'
+  },
+  rowEnable: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: '#000000',
+    alignItems: 'center'
   },
   separator: {
     height: 1,
