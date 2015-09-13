@@ -2,6 +2,10 @@
 
 import React from "react-native";
 import Button from "react-native-button";
+import superagent from "superagent";
+import _ from "lodash";
+import cheerio from "cheerio";
+var Parser = require('parse5').Parser;
 
 const {
   Component,
@@ -25,6 +29,27 @@ class CounterApp extends Component {
     super(props);
     this.state = this.getInitialState();
     this._pressData = {};
+  }
+
+  componentDidMount() {
+    // jsdom.env(
+    //   "https://iojs.org/dist/",
+    //   ["http://code.jquery.com/jquery.js"],
+    //   function (err, window) {
+    //     console.log("there have been", window.$("a").length - 4, "io.js releases!");
+    //   }
+    // );
+    superagent.get("http://phimmoi.net")
+    .end((err, res) => {
+      //Instantiate parser 
+      var parser = new Parser();
+
+      //Then feed it with an HTML document 
+      var domTree = parser.parse(res.text);
+      var flatDom = _.flatten(domTree, true);
+
+      debugger;
+    })
   }
 
   getInitialState() {
