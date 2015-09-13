@@ -24,5 +24,8 @@
     "react",
     "react.displayName"
   ],
-  "sourceMaps": false
+  "sourceMaps": false,
+  "plugins": [
+    "babel-root-import"
+    ]
 }

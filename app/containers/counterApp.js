@@ -6,6 +6,7 @@ import superagent from "superagent";
 import _ from "lodash";
 import cheerio from "cheerio";
 var Parser = require('parse5').Parser;
+import S from "string";
 
 const {
   Component,
@@ -20,8 +21,7 @@ const {
   Label
 } = React;
 import {bindActionCreators} from 'redux';
-import Counter from '../components/counter';
-import * as counterActions from '../actions/counterActions';
+import { getHomePage } from '../actions/counterActions';
 import { connect } from 'react-redux/native';
 
 class CounterApp extends Component {
@@ -32,24 +32,17 @@ class CounterApp extends Component {
   }
 
   componentDidMount() {
-    // jsdom.env(
-    //   "https://iojs.org/dist/",
-    //   ["http://code.jquery.com/jquery.js"],
-    //   function (err, window) {
-    //     console.log("there have been", window.$("a").length - 4, "io.js releases!");
-    //   }
-    // );
-    superagent.get("http://phimmoi.net")
-    .end((err, res) => {
-      //Instantiate parser 
-      var parser = new Parser();
+    const { dispatch } = this.props;
+    dispatch(getHomePage());
+  }
 
-      //Then feed it with an HTML document 
-      var domTree = parser.parse(res.text);
-      var flatDom = _.flatten(domTree, true);
-
-      debugger;
-    })
+  componentWillReceiveProps(newProps) {
+    debugger;
+    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    return {
+      dataSource: ds.cloneWithRows(this._genRows({})),
+      bounceValue: new Animated.Value(0),
+    };
   }
 
   getInitialState() {
@@ -61,12 +54,10 @@ class CounterApp extends Component {
   }
 
   _genRows(pressData: {[key: number]: boolean}): Array<string> {
-    var dataBlob = [];
-    for (var ii = 0; ii < 100; ii++) {
-      var pressedText = pressData[ii] ? ' (pressed)' : '';
-      dataBlob.push('Row ' + ii + pressedText);
-    }
-    return dataBlob;
+    let data = this.props.homepage;
+    return _.map(data, (movie) => {
+      var pressedText = movies.name ? ' (pressed)' : '';
+    })
   }
 
   _pressRow(rowID: number) {
@@ -90,7 +81,7 @@ class CounterApp extends Component {
       backgroundColor: "#000000"
     }
 
-    let style = !! this._pressData[rowID] ? [styles.rowEnable, transform] : [styles.row];
+    let style = !! this.props.homepage[rowID] ? [styles.rowEnable, transform] : [styles.row];
 
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
@@ -105,13 +96,18 @@ class CounterApp extends Component {
   }
 
   render() {
-    const { state, dispatch } = this.props;
+    const { state, dispatch, homepage, test } = this.props;
 
     return (
+      <View>
+      <View>
+      <Text>{test.text}</Text>
+      </View>
       <ListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
         />
+      </View>
     );
   }
 }
@@ -120,8 +116,10 @@ var THUMB_URLS = ['https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/
 var LOREM_IPSUM = 'Lorem ipsum dolor sit amet, ius ad pertinax oportere accommodare, an vix civibus corrumpit referrentur. Te nam case ludus inciderint, te mea facilisi adipiscing. Sea id integre luptatum. In tota sale consequuntur nec. Erat ocurreret mei ei. Eu paulo sapientem vulputate est, vel an accusam intellegam interesset. Nam eu stet pericula reprimique, ea vim illud modus, putant invidunt reprehendunt ne qui.';
 
 mapStateToProps = (state) => {
+  let {homepage, test} = state;
   return {
-    state: state.counter
+    homepage,
+    test
   }
 }
 

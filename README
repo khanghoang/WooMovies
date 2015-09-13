@@ -1,0 +1,3 @@
+Here's the solution.
+It may caused by node_module/cheerio/index.js.
+just comment the last line.(exports.version...)
