@@ -1,27 +1,25 @@
-import * as types from '../actions/actionTypes';
 import {
   REQUEST_HOMEPAGE,
   RECEIVE_HOMEPAGE
-} from '../actions/actionTypes';
+} from '../actions/counterActions';
 import superagent from 'superagent';
 import _ from 'lodash';
 
-export function homepage(state = {}, action) {
+export default function homepage(state = {}, action) {
   switch (action.type) {
     case REQUEST_HOMEPAGE: {
-      return _.assign({}, state, {
+      return Object.assign({}, {
         isLoading: true
       });
-      break;
     }
+    break;
     case RECEIVE_HOMEPAGE: {
-      return _.assign({}, {
-        data: []
-      }, {
+      return Object.assign({}, {
+        data: action.data,
         isLoading: false
       })
-      break;
     }
+    break;
 
     default:{
       return state;
@@ -29,20 +27,20 @@ export function homepage(state = {}, action) {
   }
 }
 
-export function test(state = {text: "load"}, action) {
+export default function test(state = {}, action) {
   switch (action.type) {
     case REQUEST_HOMEPAGE: {
-      return _.assign({}, state, {
+      return Object.assign({}, {
         text: "load"
       });
-      break;
     }
+    break;
     case RECEIVE_HOMEPAGE: {
-      return _.assign({}, action, {
+      return Object.assign({}, {
         text: "done"
       })
-      break;
     }
+      break;
 
     default:{
       return state;

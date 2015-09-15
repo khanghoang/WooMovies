@@ -5,7 +5,6 @@ import Button from "react-native-button";
 import superagent from "superagent";
 import _ from "lodash";
 import cheerio from "cheerio";
-var Parser = require('parse5').Parser;
 import S from "string";
 
 const {
@@ -24,10 +23,16 @@ import {bindActionCreators} from 'redux';
 import { getHomePage } from '../actions/counterActions';
 import { connect } from 'react-redux/native';
 
+// @connect(state => ({
+//   state: state.counter,
+//   test: state.test,
+//   homepage: state.homepage
+// }))
+
 class CounterApp extends Component {
   constructor(props) {
     super(props);
-    this.state = this.getInitialState();
+    // this.state = this.getInitialState();
     this._pressData = {};
   }
 
@@ -37,7 +42,6 @@ class CounterApp extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    debugger;
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return {
       dataSource: ds.cloneWithRows(this._genRows({})),
@@ -56,7 +60,7 @@ class CounterApp extends Component {
   _genRows(pressData: {[key: number]: boolean}): Array<string> {
     let data = this.props.homepage;
     return _.map(data, (movie) => {
-      var pressedText = movies.name ? ' (pressed)' : '';
+      var pressedText = movie.name ? ' (pressed)' : '';
     })
   }
 
@@ -96,17 +100,13 @@ class CounterApp extends Component {
   }
 
   render() {
-    const { state, dispatch, homepage, test } = this.props;
+    const { homepage, test } = this.props;
 
     return (
       <View>
       <View>
       <Text>{test.text}</Text>
       </View>
-      <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow.bind(this)}
-        />
       </View>
     );
   }
@@ -160,3 +160,4 @@ var styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps)(CounterApp);
+// export default CounterApp;
