@@ -19,6 +19,20 @@ export function decrement() {
   };
 }
 
+// var request = require('superagent').agent();
+//
+// request.get('http://www.phimmoi.net/phim/ke-the-mang-3002/xem-phim.html')
+// .end(function(err, res) {
+//    request.post('http://www.phimmoi.net/player/v1.46/plugins/gkplugins_picasa2gdocs/plugins/plugins_player.php')
+//    .type('form')
+//    .send({
+//        url: 'https://picasaweb.google.com/lh/photo/phimmoi.net/UGhpbU1vaV8LivHXpYwPAQON1vsrSSIXTYgtwJIkT4M8ESfam!vZHNyLZMdnUrF7l!vZH.*OnDvT0FZahQ6wpWWVjL~plKqh0~plKsofV5m~plKfOLAqmW.*OnOhdx~plKnP6Fzg9VO7QGW!vZHw0ikPgUom4zL6zfW8nHWG5bizpNvAg__eefd448d1442391078@v1.3'
+//    })
+//    .end(function(err1, res1) {
+//        console.log(res1.text);
+//    });
+// })
+
 function requestHomePage() {
   return {
     type: REQUEST_HOMEPAGE
