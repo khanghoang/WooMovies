@@ -1,6 +1,7 @@
 import React from 'react-native';
 const {
-  Component
+  Component,
+  NavigatorIOS
 } = React;
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux/native';
@@ -14,9 +15,20 @@ export default class App extends Component {
   render() {
     const createStoreWithMiddleware = applyMiddleware(thunk, loggerMiddleware)(createStore);
     const store = createStoreWithMiddleware(rootReducer);
+
+    let app = (
+      <CounterApp />
+    )
+
     return (
       <Provider store={store}>
-        {() => <CounterApp />}
+      {() => <NavigatorIOS
+        style={{flex: 1}}
+        initialRoute={{
+          component: CounterApp,
+          title: 'My View Title'
+        }}
+        />}
       </Provider>
     );
   }
