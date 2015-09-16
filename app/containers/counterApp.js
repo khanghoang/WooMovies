@@ -19,20 +19,13 @@ const {
   LayoutAnimation,
   Label
 } = React;
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import { getHomePage } from '../actions/counterActions';
 import { connect } from 'react-redux/native';
-
-// @connect(state => ({
-//   state: state.counter,
-//   test: state.test,
-//   homepage: state.homepage
-// }))
 
 class CounterApp extends Component {
   constructor(props) {
     super(props);
-    // this.state = this.getInitialState();
     this._pressData = {};
   }
 
@@ -41,79 +34,81 @@ class CounterApp extends Component {
     dispatch(getHomePage());
   }
 
-  componentWillReceiveProps(newProps) {
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    return {
-      dataSource: ds.cloneWithRows(this._genRows({})),
-      bounceValue: new Animated.Value(0),
-    };
-  }
-
-  getInitialState() {
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    return {
-      dataSource: ds.cloneWithRows(this._genRows({})),
-      bounceValue: new Animated.Value(0),
-    };
-  }
-
   _genRows(pressData: {[key: number]: boolean}): Array<string> {
-    let data = this.props.homepage;
+    let data = this.props.homepage.data || [];
     return _.map(data, (movie) => {
-      var pressedText = movie.name ? ' (pressed)' : '';
-    })
+      var pressedtext = movie.name ? ' (pressed)' : '';
+    });
   }
 
   _pressRow(rowID: number) {
     console.log(rowID);
-    this._pressData[rowID] = !this._pressData[rowID];
-    this.setState({dataSource: this.state.dataSource.cloneWithRows(
-      this._genRows(this._pressData)
-    )});
-    LayoutAnimation.spring();
   }
 
   _renderRow(rowData: string, sectionID: number, rowID: number) {
-    var rowHash = Math.abs(hashCode(rowData));
-    var imgSource = {
-      uri: THUMB_URLS[rowHash % THUMB_URLS.length],
-    };
-
     let transform = {
       height: 50,
       width: 100,
-      backgroundColor: "#000000"
+      backgroundColor: "#333333"
     }
 
-    let style = !! this.props.homepage[rowID] ? [styles.rowEnable, transform] : [styles.row];
+    let style = !! this.props.homepage.data[rowID] ? [styles.rowEnable, transform] : [styles.row];
+    let name = this.props.homepage.data[rowID].title;
+    let imgSource = this.props.homepage.data[rowID].coverImage + "jpg";
+
+    if(!!~imgSource.indexOf("ground-image:url(")) {
+      var sub = "ground-image:url('";
+      var pos = imgSource.indexOf(sub);
+      imgSource = imgSource.substr(pos + sub.length, imgSource.length);
+    }
 
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View style={styles.row}>
-          <View style={style}>
-          <Text style={{flex: 1}}>abc</Text>
-          </View>
+          <Image style={styles.thumb} source={{uri: imgSource}} />
+          <Text style={{flex: 1}}>{name}</Text>
           <View style={styles.separator} />
         </View>
       </TouchableHighlight>
     );
   }
 
+  _renderRowList() {
+    const { homepage, test } = this.props;
+    let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    let listView = (
+      <ListView
+      dataSource={ds.cloneWithRows(homepage.data)}
+      renderRow={this._renderRow.bind(this)}
+      style={[{height: 180, width: 320, backgroundColor: "#232345"}]}
+      horizontal={true}
+      directionalLockEnabled={true}
+      />
+    )
+    return listView;
+  }
+
   render() {
     const { homepage, test } = this.props;
 
+    if (homepage.data) {
+      let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      var bigListView = (
+        <ListView
+        // dataSource={ds.cloneWithRows([listView, listView2])}
+        dataSource={ds.cloneWithRows([1, 2, 3, 4, 5, 6, 7, 8])}
+        renderRow={this._renderRowList.bind(this)}
+        />
+      )
+    }
+
     return (
-      <View>
-      <View>
-      <Text>{test.text}</Text>
-      </View>
+      <View style={{flex: 1}}>
+      {{bigListView}}
       </View>
     );
   }
 }
-
-var THUMB_URLS = ['https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851549_767334479959628_274486868_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851561_767334496626293_1958532586_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851579_767334503292959_179092627_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851589_767334513292958_1747022277_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851563_767334559959620_1193692107_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851593_767334566626286_1953955109_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851591_767334523292957_797560749_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851567_767334529959623_843148472_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851548_767334489959627_794462220_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851575_767334539959622_441598241_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851573_767334549959621_534583464_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851583_767334573292952_1519550680_n.png'];
-var LOREM_IPSUM = 'Lorem ipsum dolor sit amet, ius ad pertinax oportere accommodare, an vix civibus corrumpit referrentur. Te nam case ludus inciderint, te mea facilisi adipiscing. Sea id integre luptatum. In tota sale consequuntur nec. Erat ocurreret mei ei. Eu paulo sapientem vulputate est, vel an accusam intellegam interesset. Nam eu stet pericula reprimique, ea vim illud modus, putant invidunt reprehendunt ne qui.';
 
 mapStateToProps = (state) => {
   let {homepage, test} = state;
@@ -123,21 +118,24 @@ mapStateToProps = (state) => {
   }
 }
 
-var hashCode = function(str) {
-  var hash = 15;
-  for (var ii = str.length - 1; ii >= 0; ii--) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(ii);
-  }
-  return hash;
-};
-
 var styles = StyleSheet.create({
+  list: {
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    height: 200
+  },
   row: {
-    flex: 1,
     justifyContent: 'center',
-    padding: 10,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center'
+    padding: 5,
+    margin: 3,
+    width: 100,
+    height: 150,
+    backgroundColor: '#F6F6F6',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#CCC'
   },
   rowEnable: {
     flex: 1,
@@ -151,8 +149,8 @@ var styles = StyleSheet.create({
     backgroundColor: '#CCCCCC',
   },
   thumb: {
-    width: 64,
-    height: 64,
+    width: 75,
+    height: 100,
   },
   text: {
     flex: 1,
@@ -160,4 +158,3 @@ var styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps)(CounterApp);
-// export default CounterApp;
