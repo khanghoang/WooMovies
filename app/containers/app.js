@@ -23,7 +23,7 @@ export default class App extends Component {
         style={{flex: 1}}
         initialRoute={{
           component: CounterApp,
-          title: 'My View Title'
+          title: 'Trang chủ'
         }}
         />}
       </Provider>

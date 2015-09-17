@@ -30,7 +30,6 @@ import { connect } from 'react-redux/native';
 class CounterApp extends Component {
   constructor(props) {
     super(props);
-    this._pressData = {};
   }
 
   componentDidMount() {
@@ -59,13 +58,6 @@ class CounterApp extends Component {
   }
 
   _renderRow(rowData: string, sectionID: number, rowID: number) {
-    let transform = {
-      height: 50,
-      width: 100,
-      backgroundColor: "#333333"
-    }
-
-    let style = !! this.props.homepage.data[rowID] ? [styles.rowEnable, transform] : [styles.row];
     let name = this.props.homepage.data[rowID].title;
     let imgSource = this.props.homepage.data[rowID].coverImage + "jpg";
 
@@ -75,12 +67,13 @@ class CounterApp extends Component {
       imgSource = imgSource.substr(pos + sub.length, imgSource.length);
     }
 
+    let style = {flex: 1, width: 120, marginLeft: 2, marginRight: (parseInt(rowID) === this.props.homepage.data.length-1 ? 8 : 2)}
+
     return (
-      <TouchableHighlight onPress={() => this._pressRow(rowID)}>
-        <View style={styles.row}>
-          <Image style={styles.thumb} source={{uri: imgSource}} />
-          <Text style={{flex: 1}}>{name}</Text>
-          <View style={styles.separator} />
+      <TouchableHighlight style={style} onPress={() => this._pressRow(rowID)}>
+      <View>
+          <Image style={[styles.thumb, {flex: 1}]} source={{uri: imgSource}} />
+          <Text style={{flex: 1, fontSize: 12, marginTop: 3, height: 30}}>{name}</Text>
         </View>
       </TouchableHighlight>
     );
@@ -93,9 +86,10 @@ class CounterApp extends Component {
       <ListView
       dataSource={ds.cloneWithRows(homepage.data)}
       renderRow={this._renderRow.bind(this)}
-      style={[{height: 180, flex: 1}]}
+      style={{height: 210, paddingRight: 10, paddingLeft: 5}}
       horizontal={true}
       directionalLockEnabled={true}
+      automaticallyAdjustContentInsets={false}
       />
     )
     return listView;
@@ -103,10 +97,6 @@ class CounterApp extends Component {
 
   _setTime(obj) {
     this.props.currentTime = obj.currentTime;
-  }
-
-  _handleSeeker() {
-    this.refs.videoPlayer.seek(600);
   }
 
   _onValueChange(value) {
@@ -124,7 +114,7 @@ class CounterApp extends Component {
       let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       var bigListView = (
         <ListView
-        // dataSource={ds.cloneWithRows([listView, listView2])}
+        style={{flex: 1, paddingTop: 20}}
         dataSource={ds.cloneWithRows([1, 2, 3, 4, 5, 6, 7, 8])}
         renderRow={this._renderRowList.bind(this)}
         />
@@ -152,7 +142,6 @@ var styles = StyleSheet.create({
     height: 10,
     width: 568,
     top: 290,
-    left: 0,
     position: "relative"
   },
   list: {
@@ -162,31 +151,24 @@ var styles = StyleSheet.create({
     height: 200
   },
   row: {
-    justifyContent: 'center',
-    padding: 5,
+    // justifyContent: 'center',
+    // padding: 3,
     margin: 3,
-    width: 100,
-    height: 150,
-    backgroundColor: '#F6F6F6',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#CCC'
+    width: 120,
+    height: 180,
+    // alignItems: 'center',
   },
   rowEnable: {
     flex: 1,
     justifyContent: 'center',
-    padding: 10,
-    backgroundColor: '#000000',
     alignItems: 'center'
   },
   separator: {
     height: 1,
-    backgroundColor: '#CCCCCC',
   },
   thumb: {
-    width: 75,
-    height: 100,
+    width: 120,
+    height: 170,
   },
   text: {
     flex: 1,
