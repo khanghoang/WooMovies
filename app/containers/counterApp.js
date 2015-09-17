@@ -38,17 +38,10 @@ class CounterApp extends Component {
     dispatch(getHomePage());
   }
 
-  _genRows(pressData: {[key: number]: boolean}): Array<string> {
-    let data = this.props.homepage.data || [];
-    return _.map(data, (movie) => {
-      var pressedtext = movie.name ? ' (pressed)' : '';
-    });
-  }
-
-  _pressRow(rowID: number) {
-    let shortUrl = this.props.homepage.data[rowID].href;
+  _pressRow(rowData: Object) {
+    let shortUrl = rowData.href;
     let url = "http://www.phimmoi.net/" + shortUrl + "xem-phim.html"
-    let title = this.props.homepage.data[rowID].title;
+    let title = rowData.title;
 
     this.props.navigator.push({
       component: Player,
@@ -59,9 +52,9 @@ class CounterApp extends Component {
     });
   }
 
-  _renderRow(rowData: string, sectionID: number, rowID: number) {
-    let name = this.props.homepage.data[rowID].title;
-    let imgSource = this.props.homepage.data[rowID].coverImage + "jpg";
+  _renderRow(rowData: Object, sectionID: number, rowID: number) {
+    let name = rowData.title;
+    let imgSource = rowData.coverImage + "jpg";
 
     if(!!~imgSource.indexOf("ground-image:url(")) {
       var sub = "ground-image:url('";
@@ -69,10 +62,11 @@ class CounterApp extends Component {
       imgSource = imgSource.substr(pos + sub.length, imgSource.length);
     }
 
-    let style = {flex: 1, width: 120, marginLeft: 2, marginRight: (parseInt(rowID) === this.props.homepage.data.length-1 ? 8 : 2)}
+    // let style = {flex: 1, width: 120, marginLeft: 2, marginRight: (parseInt(rowID) === this.props.homepage.data.length-1 ? 8 : 2)}
+    let style = {flex: 1, width: 120, marginLeft: 2, marginRight: 2};
 
     return (
-      <TouchableHighlight style={style} onPress={() => this._pressRow(rowID)}>
+      <TouchableHighlight style={style} onPress={() => this._pressRow(rowData)}>
       <View>
           <Image style={[styles.thumb, {flex: 1}]} source={{uri: imgSource}} />
           <Text style={{flex: 1, fontSize: 12, marginTop: 3, height: 30}}>{name}</Text>
@@ -81,32 +75,29 @@ class CounterApp extends Component {
     );
   }
 
-  _renderRowList() {
+  _renderRowList(rowData: string, sectionID: number, rowID: number) {
     const { homepage, test } = this.props;
     let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     let listView = (
+      <View>
+      <Text style={{flex: 1, fontSize: 16, marginTop: 3, marginLeft: 5, height: 24}}>
+      {homepage.data[rowID].category.name}
+      </Text>
       <ListView
-      dataSource={ds.cloneWithRows(homepage.data)}
+      dataSource={ds.cloneWithRows(homepage.data[rowID].movies)}
       renderRow={this._renderRow.bind(this)}
       style={{height: 210, paddingRight: 10, paddingLeft: 5}}
       horizontal={true}
       directionalLockEnabled={true}
       automaticallyAdjustContentInsets={false}
       />
+      </View>
     )
     return listView;
   }
 
   _setTime(obj) {
     this.props.currentTime = obj.currentTime;
-  }
-
-  _onValueChange(value) {
-    this.refs.videoPlayer.seek(value * 120 * 60);
-  }
-
-  _onLoad(obj) {
-    console.log(obj);
   }
 
   render() {
@@ -117,7 +108,7 @@ class CounterApp extends Component {
       var bigListView = (
         <ListView
         style={{flex: 1, paddingTop: 20}}
-        dataSource={ds.cloneWithRows([1, 2, 3, 4, 5, 6, 7, 8])}
+        dataSource={ds.cloneWithRows(homepage.data)}
         renderRow={this._renderRowList.bind(this)}
         />
       )
@@ -170,12 +161,9 @@ var styles = StyleSheet.create({
     height: 200
   },
   row: {
-    // justifyContent: 'center',
-    // padding: 3,
     margin: 3,
     width: 120,
     height: 180,
-    // alignItems: 'center',
   },
   rowEnable: {
     flex: 1,
@@ -198,7 +186,6 @@ var styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-    // flex: 1
   }
 
 });
