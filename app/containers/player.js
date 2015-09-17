@@ -67,7 +67,7 @@ class Player extends Component {
       style={styles.backgroundVideo}
       ref="videoPlayer"
       />
-      <View style={{position: "relative", height: 320, width: 568, backgroundColor: 'rgba(0,0,0,0)'}}>
+      <View style={{position: "relative", height: 20, flex: 1, bottom: 20, backgroundColor: 'rgba(0,0,0,0)'}}>
       <SliderIOS 
       style={styles.slider} 
       onValueChange={this._onValueChange.bind(this)} 
@@ -106,10 +106,11 @@ mapStateToProps = (state) => {
 var styles = StyleSheet.create({
   slider: {
     height: 10,
-    width: 568,
-    top: 290,
-    left: 0,
-    position: "relative"
+    flex: 1,
+    bottom: 0,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 20,
   },
   backgroundVideo: {
     position: 'absolute',
@@ -118,7 +119,7 @@ var styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-    // flex: 1
+    flex: 1
   }
 });
 
