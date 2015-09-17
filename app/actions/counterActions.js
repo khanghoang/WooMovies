@@ -19,20 +19,6 @@ export function decrement() {
   };
 }
 
-// var request = require('superagent').agent();
-//
-// request.get('http://www.phimmoi.net/phim/ke-the-mang-3002/xem-phim.html')
-// .end(function(err, res) {
-//    request.post('http://www.phimmoi.net/player/v1.46/plugins/gkplugins_picasa2gdocs/plugins/plugins_player.php')
-//    .type('form')
-//    .send({
-//        url: 'https://picasaweb.google.com/lh/photo/phimmoi.net/UGhpbU1vaV8LivHXpYwPAQON1vsrSSIXTYgtwJIkT4M8ESfam!vZHNyLZMdnUrF7l!vZH.*OnDvT0FZahQ6wpWWVjL~plKqh0~plKsofV5m~plKfOLAqmW.*OnOhdx~plKnP6Fzg9VO7QGW!vZHw0ikPgUom4zL6zfW8nHWG5bizpNvAg__eefd448d1442391078@v1.3'
-//    })
-//    .end(function(err1, res1) {
-//        console.log(res1.text);
-//    });
-// })
-
 function requestHomePage() {
   return {
     type: REQUEST_HOMEPAGE
@@ -55,15 +41,54 @@ export function getHomePage() {
     .end((err, res) => {
       //Then feed it with an HTML document 
       var $ = cheerio.load(res.text);
-      let data = _.chain($(".home-v2 .last-film-box-wrapper ul li a"))
+
+      // category section
+      let data = _.chain($(".movie-list-index"))
+
+      // get category name
       .map((el) => {
-        let image = {
-          coverImage: S($('.public-film-item-thumb', el).attr("style")).between('&url=', 'jpg').s
+        let categoryName = $('.title-list-index', el).text();
+        return {
+          el: el,
+          categoryName: categoryName
         }
-        var movie = _.assign({}, el.attribs, image);
-        return movie;
+      })
+
+      // get view all href
+      .map((node) => {
+        let viewAllHref = $(".more-list-index", node.el).attr("href");
+        return Object.assign({}, {viewAllHref: viewAllHref}, node);
+      })
+
+      // get all movies
+      .map((node) => {
+        let movieNodes = $(".last-film-box li a", node.el);
+
+        let movies = _.map(movieNodes, (mNode) => {
+
+          let image = {
+            coverImage: S($('.public-film-item-thumb', mNode).attr("style")).between('&url=', 'jpg').s
+          }
+
+          var movie = _.assign({}, mNode.attribs, image);
+          return movie;
+        })
+
+        return Object.assign({},
+                             {
+                               movies: movies
+                             },
+                             {
+                               category:
+                                 {
+                                 name: node.categoryName,
+                                 viewAllHref: node.viewAllHref
+                               }
+                             });
+
       })
       .value();
+
       dispatch(receiveHomePage(err, data))
     })
   };
