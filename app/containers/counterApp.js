@@ -21,7 +21,8 @@ const {
   Animated,
   LayoutAnimation,
   Label,
-  SliderIOS
+  SliderIOS,
+  ActivityIndicatorIOS
 } = React;
 import { bindActionCreators } from 'redux';
 import { getHomePage } from '../actions/counterActions';
@@ -45,12 +46,13 @@ class CounterApp extends Component {
   }
 
   _pressRow(rowID: number) {
-    console.log(Player);
     let shortUrl = this.props.homepage.data[rowID].href;
     let url = "http://www.phimmoi.net/" + shortUrl + "xem-phim.html"
+    let title = this.props.homepage.data[rowID].title;
 
     this.props.navigator.push({
       component: Player,
+      title: title,
       passProps: {
         url: url
       }
@@ -119,13 +121,30 @@ class CounterApp extends Component {
         renderRow={this._renderRowList.bind(this)}
         />
       )
+      return (
+        <View style={{flex: 1}}>
+        {bigListView}
+        </View>
+      );
+    }
+
+    if(homepage.error) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Lỗi khi load dữ liệu, vui lòng thử lại</Text>
+        </View>
+      )
     }
 
     return (
-      <View style={{flex: 1}}>
-      {bigListView}
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicatorIOS
+        animating={true}
+        size="small"
+      />
       </View>
-    );
+    )
+
   }
 }
 

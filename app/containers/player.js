@@ -11,7 +11,8 @@ const {
   Component,
   SliderIOS,
   StyleSheet,
-  Text
+  Text,
+  ActivityIndicatorIOS
 } = React;
 
 class Player extends Component {
@@ -49,7 +50,6 @@ class Player extends Component {
 
     if(movie.data) {
       let url = movie.data.content[1].url;
-      console.log(url);
       return (
       <View style={{flex: 1}}>
       <Video source={{uri: url}} // Can be a URL or a local file.
@@ -77,8 +77,20 @@ class Player extends Component {
       )
     }
 
+    if(movie.error) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Lỗi khi load dữ liệu, vui lòng thử lại</Text>
+        </View>
+      )
+    }
+
     return (
-      <View>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicatorIOS
+        animating={true}
+        size="small"
+      />
       </View>
     )
   }
