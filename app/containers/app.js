@@ -16,9 +16,6 @@ export default class App extends Component {
     const createStoreWithMiddleware = applyMiddleware(thunk, loggerMiddleware)(createStore);
     const store = createStoreWithMiddleware(rootReducer);
 
-    let app = (
-      <CounterApp />
-    )
 
     return (
       <Provider store={store}>

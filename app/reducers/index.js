@@ -2,6 +2,8 @@ var types = require('../actions/counterActions.js')
 import superagent from 'superagent';
 import { combineReducers } from 'redux';
 
+import { REQUEST_CURRENT_PLAYER_MOVIE, RECEIVE_CURRENT_PLAYER_MOVIE } from "../actions/movieLoaderActions";
+
 import _ from 'lodash';
 
 function homepage(state = {}, action) {
@@ -13,6 +15,29 @@ function homepage(state = {}, action) {
     }
       break;
     case types.RECEIVE_HOMEPAGE: {
+      return Object.assign({}, {
+        data: action.data,
+        error: action.error,
+        isLoading: false
+      })
+    }
+      break;
+
+    default:{
+      return state;
+    }
+  }
+}
+
+function currentPlayerMovie(state = {}, action) {
+  switch (action.type) {
+    case REQUEST_CURRENT_PLAYER_MOVIE: {
+      return Object.assign({}, {
+        isLoading: true
+      });
+    }
+      break;
+    case RECEIVE_CURRENT_PLAYER_MOVIE: {
       return Object.assign({}, {
         data: action.data,
         error: action.error,
@@ -50,7 +75,8 @@ function test(state = {text: "done"}, action) {
 
 const rootReducer = combineReducers({
   homepage,
-  test
+  test,
+  currentPlayerMovie
 });
 
 export default rootReducer;

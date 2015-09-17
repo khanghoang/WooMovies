@@ -8,6 +8,7 @@ import cheerio from "cheerio";
 import S from "string";
 
 import Video from "react-native-video";
+import Player from "./player";
 
 const {
   Component,
@@ -45,7 +46,16 @@ class CounterApp extends Component {
   }
 
   _pressRow(rowID: number) {
-    console.log(rowID);
+    console.log(Player);
+    let shortUrl = this.props.homepage.data[rowID].href;
+    let url = "http://www.phimmoi.net/" + shortUrl + "xem-phim.html"
+
+    this.props.navigator.push({
+      component: Player,
+      passProps: {
+        url: url
+      }
+    });
   }
 
   _renderRow(rowData: string, sectionID: number, rowID: number) {
@@ -83,7 +93,7 @@ class CounterApp extends Component {
       <ListView
       dataSource={ds.cloneWithRows(homepage.data)}
       renderRow={this._renderRow.bind(this)}
-      style={[{height: 200, width: 320, backgroundColor: "#232345"}]}
+      style={[{height: 180, flex: 1}]}
       horizontal={true}
       directionalLockEnabled={true}
       />
@@ -121,32 +131,8 @@ class CounterApp extends Component {
       )
     }
 
-      // <View style={{flex: 1}}>
-      // <Video source={{uri: "https://r4---sn-8pxuuxa-nbo6.googlevideo.com/videoplayback?requiressl=yes&id=0117916f126832bf&itag=18&source=picasa&cmo=secure_transport=yes&ip=0.0.0.0&ipbits=0&expire=1442424753&sparams=requiressl,id,itag,source,ip,ipbits,expire&signature=7D1888D8A1215DF5A6515E5D97121B807C0C2412.4FB53352B7F445565C7CFB30F883C69A8D484CC1&key=lh1"}} // Can be a URL or a local file.
-      // rate={1.0}                   // 0 is paused, 1 is normal.
-      // volume={1.0}                 // 0 is muted, 1 is normal.
-      // muted={false}                // Mutes the audio entirely.
-      // paused={false}               // Pauses playback entirely.
-      // // resizeMode="cover"           // Fill the whole screen at aspect ratio.
-      // repeat={true}                // Repeat forever.
-      // onLoadStart={this.loadStart} // Callback when video starts to load
-      // onLoad={this._onLoad}    // Callback when video loads
-      // onProgress={this._setTime.bind(this)}    // Callback every ~250ms with currentTime
-      // onEnd={this.onEnd}           // Callback when playback finishes
-      // onError={this.videoError}    // Callback when video cannot be loaded
-      // style={styles.backgroundVideo}
-      // ref="videoPlayer"
-      // />
-      // <View style={{position: "relative", height: 320, width: 568, backgroundColor: 'rgba(0,0,0,0)'}}>
-      // <SliderIOS 
-      // style={styles.slider} 
-      // onValueChange={this._onValueChange.bind(this)} 
-      // />
-      // </View>
-      // </View>
-
     return (
-      <View style={{width: 320, height: 568, backgroundColor:"#333333"}}>
+      <View style={{flex: 1}}>
       {bigListView}
       </View>
     );
