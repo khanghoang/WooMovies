@@ -23,7 +23,7 @@ const {
   Label,
   SliderIOS,
   ActivityIndicatorIOS,
-  Navigator
+  TouchableOpacity
 } = React;
 import { bindActionCreators } from 'redux';
 import { getHomePage } from '../actions/counterActions';
@@ -46,6 +46,7 @@ class CounterApp extends Component {
 
     this.props.navigator.push({
       name: "player",
+      title: rowData.title,
       url: url,
       sceneConfig: Navigator.SceneConfigs.FloatFromRight,
     });
@@ -65,12 +66,12 @@ class CounterApp extends Component {
     let style = {flex: 1, width: 120, marginLeft: 2, marginRight: 2};
 
     return (
-      <TouchableHighlight style={style} onPress={() => this._pressRow(rowData)}>
+      <TouchableOpacity style={style} onPress={() => this._pressRow(rowData)}>
       <View>
           <Image style={[styles.thumb, {flex: 1}]} source={{uri: imgSource}} />
           <Text style={{flex: 1, fontSize: 12, marginTop: 3, height: 30}}>{name}</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 
