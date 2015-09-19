@@ -22,7 +22,8 @@ const {
   LayoutAnimation,
   Label,
   SliderIOS,
-  ActivityIndicatorIOS
+  ActivityIndicatorIOS,
+  Navigator
 } = React;
 import { bindActionCreators } from 'redux';
 import { getHomePage } from '../actions/counterActions';
@@ -44,11 +45,9 @@ class CounterApp extends Component {
     let title = rowData.title;
 
     this.props.navigator.push({
-      component: Player,
-      title: title,
-      passProps: {
-        url: url
-      }
+      name: "player",
+      url: url,
+      sceneConfig: Navigator.SceneConfigs.FloatFromRight,
     });
   }
 
@@ -121,7 +120,7 @@ class CounterApp extends Component {
 
     if(homepage.error) {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#ffffff"}}>
         <Text>Lỗi khi load dữ liệu, vui lòng thử lại</Text>
         </View>
       )

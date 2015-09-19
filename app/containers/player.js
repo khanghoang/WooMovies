@@ -12,7 +12,8 @@ const {
   SliderIOS,
   StyleSheet,
   Text,
-  ActivityIndicatorIOS
+  ActivityIndicatorIOS,
+  InteractionManager
 } = React;
 
 class Player extends Component {

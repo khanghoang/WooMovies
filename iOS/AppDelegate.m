@@ -9,7 +9,7 @@
 
 #import "AppDelegate.h"
 
-#import "RCTRootView.h"
+#import <RCTRootView.h>
 
 @implementation AppDelegate
 
@@ -45,8 +45,13 @@
 
 //   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
+//  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+//                                                      moduleName:@"rnRedux"
+//                                                   launchOptions:launchOptions];
+
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"rnRedux"
+                                               initialProperties:@{}
                                                    launchOptions:launchOptions];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
