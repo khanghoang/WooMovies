@@ -34,27 +34,17 @@ export default class App extends Component {
         }}
         renderScene={(route, navigator) => {
           if(route.name === "home") {
-            // return <CounterApp navigator={navigator}/>
-            return (
-              <View style={{flex: 1, backgroundColor: "#333333"}}>
-              <TouchableHighlight style={{flex: 1}}
-              onPress={() => navigator.push({name: "player", url: ""})}
-              >
-              <Text> Test </Text>
-              </TouchableHighlight>
-              </View>
-            )
+            return <CounterApp navigator={navigator}/>
           }
 
           if(route.name === 'player') {
-            // return <View style={{flex: 1}} />
+            // return <View style={{flex: 1, backgroundColor: "black"}} />
             return <Player url={route.url}/>
           }
 
           return <Player url={route.url}/>
 
         }}
-        // configureScene={(route) => Navigator.SceneConfigs.HorizontalSwipeJump}
         configureScene={(route) => {
           if(route.configureScene) {
             return route.configureScene;

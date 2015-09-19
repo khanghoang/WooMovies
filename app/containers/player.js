@@ -24,7 +24,10 @@ class Player extends Component {
 
   componentDidMount() {
     const {dispatch, url} = this.props;
-    dispatch(getMovieWithURL(url));
+    InteractionManager.runAfterInteractions(() => {
+      // ...long-running synchronous task...
+      dispatch(getMovieWithURL(url));
+    });
   }
 
   _setTime(obj) {
@@ -52,7 +55,7 @@ class Player extends Component {
     if(movie.data) {
       let url = movie.data.content[1].url;
       return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: "white"}}>
       <Video source={{uri: url}} // Can be a URL or a local file.
       rate={1.0}                   // 0 is paused, 1 is normal.
       volume={1.0}                 // 0 is muted, 1 is normal.
@@ -80,14 +83,14 @@ class Player extends Component {
 
     if(movie.error) {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "white"}}>
         <Text>Lỗi khi load dữ liệu, vui lòng thử lại</Text>
         </View>
       )
     }
 
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "white"}}>
       <ActivityIndicatorIOS
         animating={true}
         size="small"

@@ -127,7 +127,7 @@ class CounterApp extends Component {
     }
 
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#ffffff"}}>
       <ActivityIndicatorIOS
         animating={true}
         size="small"
