@@ -23,7 +23,8 @@ const {
   Label,
   SliderIOS,
   ActivityIndicatorIOS,
-  TouchableOpacity
+  TouchableOpacity,
+  Navigator
 } = React;
 import { bindActionCreators } from 'redux';
 import { getHomePage } from '../actions/counterActions';
