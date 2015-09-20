@@ -107,11 +107,15 @@ class CounterApp extends Component {
     if (homepage.data) {
       let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       var bigListView = (
+        <View>
+        <View style={{flex: 1, height: 300, backgroundColor: "#333"}}>
+        </View>
         <ListView
-        style={{flex: 1, paddingTop: 20}}
+        style={{height: 368, paddingTop: 20}}
         dataSource={ds.cloneWithRows(homepage.data)}
         renderRow={this._renderRowList.bind(this)}
         />
+        </View>
       )
       return (
         <View style={{flex: 1}}>
