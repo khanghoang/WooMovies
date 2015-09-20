@@ -24,7 +24,8 @@ const {
   SliderIOS,
   ActivityIndicatorIOS,
   TouchableOpacity,
-  Navigator
+  Navigator,
+  PanResponder
 } = React;
 import { bindActionCreators } from 'redux';
 import { getHomePage } from '../actions/counterActions';
@@ -33,6 +34,13 @@ import { connect } from 'react-redux/native';
 class CounterApp extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      height: 0,
+      scrollY: new Animated.Value(0),
+    };
+  }
+
+  componentWillMount() {
   }
 
   componentDidMount() {
@@ -70,7 +78,7 @@ class CounterApp extends Component {
       <TouchableOpacity style={style} onPress={() => this._pressRow(rowData)}>
       <View>
           <Image style={[styles.thumb, {flex: 1}]} source={{uri: imgSource}} />
-          <Text style={{flex: 1, fontSize: 12, marginTop: 3, height: 30}}>{name}</Text>
+          <Text style={{flex: 1, fontSize: 12, marginTop: 3, height: 30, color: "white"}}>{name}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -81,13 +89,13 @@ class CounterApp extends Component {
     let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     let listView = (
       <View>
-      <Text style={{flex: 1, fontSize: 16, marginTop: 3, marginLeft: 5, height: 24}}>
+      <Text style={{flex: 1, fontSize: 16, marginTop: 3, marginLeft: 5, height: 24, color: "white"}}>
       {homepage.data[rowID].category.name}
       </Text>
       <ListView
       dataSource={ds.cloneWithRows(homepage.data[rowID].movies)}
       renderRow={this._renderRow.bind(this)}
-      style={{height: 210, paddingRight: 10, paddingLeft: 5}}
+      style={{height: 210, paddingRight: 10, paddingLeft: 5, width: 368}}
       horizontal={true}
       directionalLockEnabled={true}
       automaticallyAdjustContentInsets={false}
@@ -101,19 +109,38 @@ class CounterApp extends Component {
     this.props.currentTime = obj.currentTime;
   }
 
+  onScroll(event) {
+    // var offset = (event.nativeEvent.contentOffset.y + event.nativeEvent.contentInset.top) / 600;
+    var opacity = 1 - ((event.nativeEvent.contentOffset.y + event.nativeEvent.contentInset.top) % 300) / 300;
+    this.refs.header.setNativeProps({
+      opacity
+    })
+  }
+
   render() {
-    const { homepage, test } = this.props;
+    const { homepage, test} = this.props;
 
     if (homepage.data) {
       let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      // let heightStyle = {height: this.state.height};
+      let heightStyle = {bottom: this.state.height};
+      console.log(heightStyle);
       var bigListView = (
-        <View>
-        <View style={{flex: 1, height: 300, backgroundColor: "#333"}}>
+        <View style={{flex: 1, position: "relative", backgroundColor: "black"}}>
+        <View ref="header" style={{height: 300, backgroundColor: "#333", opacity: this.state.opacity}}
+        >
         </View>
         <ListView
-        style={{height: 368, paddingTop: 20}}
+        style={{flex: 1, bottom: 0, position: "absolute", top: 0, left: 0, right: 0, backgroundColor: "transparent"}}
+        ref="bigList"
+        contentInset={{top: 300}}
+        contentOffset={{y: -300}}
         dataSource={ds.cloneWithRows(homepage.data)}
         renderRow={this._renderRowList.bind(this)}
+        directionalLockEnabled={true}
+        automaticallyAdjustContentInsets={false}
+        scrollEventThrottle={16 /* get all events */ }
+        onScroll={this.onScroll.bind(this)}
         />
         </View>
       )

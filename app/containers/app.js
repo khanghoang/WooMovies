@@ -37,7 +37,7 @@ export default class App extends Component {
         }}
         renderScene={(route, navigator) => {
           if(route.name === "home") {
-            return <CounterApp navigator={navigator}/>
+            return <CounterApp navigator={navigator} height={368}/>
           }
 
           if(route.name === 'player') {
